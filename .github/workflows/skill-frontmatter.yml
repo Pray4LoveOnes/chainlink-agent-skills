@@ -1,0 +1,66 @@
+name: Skill Frontmatter
+
+# The job fails when skills-ref validate reports a problem.
+# A missing compatibility field is allowed.
+# This job does not fetch skill-doc URLs. URL Check does that.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '*-skill/**'
+      - '.github/workflows/skill-frontmatter.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-frontmatter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install skills-ref from a pinned commit
+        env:
+          # agentskills/agentskills commit that contains this skills-ref tree.
+          # Do not follow main.
+          SKILLS_REF_SHA: f130f348f502d9804278a617f86929846896d2e9
+        run: |
+          set -euo pipefail
+          dest="$RUNNER_TEMP/agentskills"
+          git init "$dest"
+          git -C "$dest" remote add origin https://github.com/agentskills/agentskills.git
+          git -C "$dest" fetch --depth 1 origin "$SKILLS_REF_SHA"
+          git -C "$dest" checkout --detach FETCH_HEAD
+          test "$(git -C "$dest" rev-parse HEAD)" = "$SKILLS_REF_SHA"
+          cd "$dest/skills-ref"
+          python -m venv .venv
+          # shellcheck disable=SC1091
+          source .venv/bin/activate
+          pip install -e .
+          echo "$dest/skills-ref/.venv/bin" >> "$GITHUB_PATH"
+
+      - name: Validate chainlink skill frontmatter
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          skills=(chainlink-*-skill)
+          if [ "${#skills[@]}" -eq 0 ]; then
+            echo "No chainlink-*-skill directory found."
+            exit 1
+          fi
+          failed=0
+          for skill in "${skills[@]}"; do
+            if [ ! -d "$skill" ]; then
+              continue
+            fi
+            if ! skills-ref validate "$skill"; then
+              failed=1
+            fi
+          done
+          exit "$failed"
