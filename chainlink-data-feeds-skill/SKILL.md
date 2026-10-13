@@ -2,9 +2,9 @@
 name: chainlink-data-feeds-skill
 description: "Helps developers read Chainlink price feeds with AggregatorV3Interface and latestRoundData. This is not a Data Streams report. REST and WebSocket report streams go to chainlink-data-streams-skill. It applies to price feed integration, feed address lookup, consumer contracts, multi-chain feeds, MVR bundle feeds, SVR and OEV feeds, feed monitoring, historical data, L2 sequencer checks, rates and volatility feeds, and SmartData and RWA feeds."
 license: MIT
-allowed-tools: Read WebFetch Write Edit Bash
+allowed-tools: Read WebFetch Write Edit
 metadata:
-  version: "0.0.8"
+  version: "0.0.9"
 ---
 
 # Chainlink Data Feeds Skill

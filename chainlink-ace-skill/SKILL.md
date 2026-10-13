@@ -3,10 +3,10 @@ name: chainlink-ace-skill
 description: "Handles Chainlink ACE policy, PolicyEngine, and Cross-Chain Identity. CCIP token-pool mechanics go to chainlink-ccip-skill. A request can need both skills. This skill does not claim the pool. It applies to audited ACE core contracts, the managed Platform, Coordinator API, Reporting API, policy chains, custom policies, credentials, KYC and AML, sanctions screening, regulated tokens, and onchain compliance rules."
 license: MIT
 compatibility: Designed for AI agents that implement https://agentskills.io/specification, including Claude Code, Cursor Composer, and Codex-style workflows.
-allowed-tools: Read WebFetch Write Edit Bash
+allowed-tools: Read WebFetch Write Edit Bash(curl:*)
 metadata:
   purpose: Chainlink ACE core contracts and managed Platform developer onboarding, compliance architecture, product scope, and reference guidance
-  version: "0.0.12"
+  version: "0.0.13"
 ---
 
 # Chainlink ACE Skill

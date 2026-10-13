@@ -3,10 +3,10 @@ name: chainlink-vrf-skill
 description: "Help developers integrate Chainlink VRF into smart contracts. Use for consumer contract generation with VRFConsumerBaseV2Plus, subscription setup and funding (LINK or native), keyHash and gas lane selection, coordinator address lookup and debugging VRF integrations. Trigger on any mention of VRF, verifiable randomness, on-chain random number generation, requestRandomWords, fulfillRandomWords, VRF subscription, VRF coordinator, keyHash, or provably fair randomness in a smart contract, even if the user does not say 'VRF' explicitly."
 license: MIT
 compatibility: Designed for AI agents that implement https://agentskills.io/specification, including Claude Code, Cursor Composer, and Codex-style workflows.
-allowed-tools: Read WebFetch Write Edit Bash
+allowed-tools: Read WebFetch Write Edit Bash(forge:*)
 metadata:
   purpose: Chainlink VRF v2.5 developer assistance and reference
-  version: "0.0.8"
+  version: "0.0.9"
 ---
 
 # Chainlink VRF Skill

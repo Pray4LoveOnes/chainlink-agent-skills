@@ -3,9 +3,9 @@ name: chainlink-confidential-ai-attester-skill
 description: "Runs LLM inference over a private document inside a TEE, returns an attested result, and keeps the raw document in the TEE. No document upload means chainlink-cre-skill. It applies to private inference, attested AI, confidential AI, and sensitive-document analysis, including lending, accredited-investor, KYC/AML, and proof-of-reserves checks."
 license: MIT
 compatibility: Designed for AI agents that implement https://agentskills.io/specification, including Claude Code, Cursor Composer, and Codex-style workflows.
-allowed-tools: Read WebFetch Write Edit Bash
+allowed-tools: Read WebFetch Write Edit
 metadata:
-  version: "0.0.5"
+  version: "0.0.6"
 ---
 
 # Chainlink Confidential AI Attester
