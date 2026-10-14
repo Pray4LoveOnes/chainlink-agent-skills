@@ -103,3 +103,13 @@ skills:
       - prompt: "Show me how to submit a gas-less atomic batch through a CRE Connect Smart Account, including EIP-712 signing and failure handling."
       - prompt: "Is a CRE Connect Smart Account an ERC-4337 account, and should I use UserOperation, EntryPoint, or a paymaster with it?"
       - prompt: "Use the CRE Connect DTA v2 extension to watch subscription and redemption requests and explain what provisioned API details you still need."
+
+  - id: chainlink-confidential-ai-attester-skill
+    path: chainlink-confidential-ai-attester-skill
+    test_cases:
+      - prompt: "I'm building a backend that needs to know when a private inference job finishes, but I don't want to keep a polling loop open. I have an ngrok URL at https://abc123.ngrok-free.dev that points to my server. How do I use the callback feature when submitting to /v1/inference?"
+      - prompt: "How do I get an API key to use Chainlink Confidential AI at this hackathon?"
+      - prompt: "I submitted an inference request and got back {\"id\": \"019ea785-e077-7399-90b1-84051ca4f091\", \"status\": \"queued\"}. How do I check if it's done? What does the completed response look like and what fields should I care about?"
+      - prompt: "I want to use the private inference service to check whether a bank statement shows someone is eligible for a $200,000 undercollateralized loan. What should my system_prompt and prompt look like to get a reliable JSON output I can parse programmatically?"
+      - prompt: "How do I call the Chainlink private inference API from Python? I want to upload a PDF at ./assets/sample-brokerage-statement.pdf, wait for the result, and get the JSON output back."
+      - prompt: "I have a PDF bank statement at ./assets/sample-bank-statement.pdf that I want to upload to the Chainlink Confidential AI service to check if someone qualifies for an undercollateralized DeFi loan. How do I submit it via curl? I have the API key in my environment as INFERENCE_API_KEY_VAR and the service is running at https://confidential-ai-dev-preview.cldev.cloud."
