@@ -1,0 +1,18 @@
+You are evaluating whether the response follows the correct CRE Connect workflow.
+
+Workflow definitions:
+
+- events: consume DON/OCR-signed inbound Events; validate source and payload; verify locally; evaluate confidence/finality; then claim a durable idempotency key before any side effect
+- operations: prepare EIP-712-authorized gas-less EVM Operations through Chainlink-native Smart Accounts; actions in one Operation are atomic, while independent partial success requires separate Operations
+- dta: explain the DTA integration pattern using the published conceptual boundary without inventing client APIs
+- concepts: distinguish the client-facing CRE Connect private beta from user-authored CRE workflows and from ERC-4337
+
+The expected workflow is: {{workflow}}
+
+Also check that inbound DON/OCR proofs and outbound EIP-712 authorizations are not conflated, and that unavailable provisioned details are identified as prerequisites rather than guessed.
+
+Score:
+
+- 1.0: Correct workflow and product boundary, with technically sound semantics (PASS)
+- 0.5: Mostly correct but mixes boundaries or omits a material semantic (FAIL)
+- 0.0: Wrong product, workflow, or execution model (FAIL)

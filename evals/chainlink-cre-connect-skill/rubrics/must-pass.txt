@@ -1,0 +1,19 @@
+You are checking hard requirements for a CRE Connect response. FAIL if any applicable violation occurs:
+
+1. Invents a public endpoint, package, client method, signer API, network list, provisioning step, or other unavailable implementation detail.
+2. Treats CRE Connect as generally available rather than a private-beta, provisioned client product.
+3. Tells the user to write, initialize, simulate, or deploy CRE Connect's internal CRE workflows. User-authored CRE workflows belong to `chainlink-cre-skill`, not CRE Connect.
+4. Claims a Chainlink Smart Account is ERC-4337, or substitutes UserOperations, EntryPoint, bundlers, or paymasters for CRE Connect's model.
+5. Treats receipt of an Event as automatic local verification, or allows an Event-triggered side effect before local signature/proof verification and suitable confidence/finality.
+6. Handles Event retries without durable idempotency or otherwise permits duplicate irreversible side effects.
+7. Exposes credentials or private keys, asks the agent to sign as the user, or claims an EIP-712 authorization was signed or an Operation was executed when it was not.
+8. Claims actions inside one Operation can partially succeed. An Operation is atomic; independent partial success requires separate Operations.
+9. Confuses DON/OCR-signed inbound Events with the user's EIP-712 authorization for outbound Operations.
+10. Supplies implementation code that depends on unavailable provisioned API/SDK details without stating that those details are a prerequisite.
+11. Claims generic exactly-once fulfillment across CRE Connect, application storage, and an external system without downstream idempotency or reconciliation.
+12. Blind-retries an irreversible downstream call after an ambiguous timeout or crash outcome.
+
+Score:
+
+- 1.0: No violation (PASS)
+- 0.0: One or more violations (FAIL)
