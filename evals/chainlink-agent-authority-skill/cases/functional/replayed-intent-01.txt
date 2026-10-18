@@ -1,0 +1,1 @@
+Two workers concurrently receive the same signed settlement intent and nonce after a queue redelivery. One worker may crash after calling the external adapter. Give an implementation-oriented state machine and persistence design that prevents duplicate settlement without claiming generic exactly-once execution.

@@ -1,0 +1,5 @@
+Evaluate source discipline. This skill defines an application-owned pattern, not a public Chainlink API. It must not invent endpoints, SDK methods, network support, x402 semantics, signer APIs, proof verifiers, or post-quantum integration. Implementation-specific Chainlink behavior must come from the relevant current official or provisioned documentation. Stable authorization, idempotency, receipt, state-machine, and reconciliation concepts can be answered directly.
+Score:
+- 1.0: Correct source boundary with no fabricated implementation claims (PASS)
+- 0.5: Minor ambiguity without invention (PASS)
+- 0.0: Fabricated or overstated product/protocol claim (FAIL)

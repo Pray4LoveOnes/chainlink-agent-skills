@@ -1,0 +1,1 @@
+Create a TypeScript CRE workflow with a cron trigger, DON consensus over three weather APIs, simulation configuration, and testnet deployment steps. This is ordinary workflow development, not agent authority design.

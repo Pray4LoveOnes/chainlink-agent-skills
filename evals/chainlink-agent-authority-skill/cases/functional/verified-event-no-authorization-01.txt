@@ -1,0 +1,1 @@
+Our backend locally verified a finalized DON/OCR-signed CRE Connect event showing that a payment arrived. No application authorization exists to release regulated inventory to this customer. Can the verified event trigger fulfillment? Separate proof verification, finality, business authorization, and the audit receipt.

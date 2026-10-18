@@ -1,0 +1,1 @@
+Design a receipt trail for a Chainlink-connected agent that proves whether the exact authorized action matches both its submitted request and authoritative execution evidence. State what the receipt cannot prove.

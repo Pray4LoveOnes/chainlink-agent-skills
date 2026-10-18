@@ -1,0 +1,6 @@
+Evaluate whether the response is actionable and proportional.
+For a design request, expect the applicable authority fields, decision order, durable state/idempotency design, receipt evidence, state transitions, recovery behavior, trust boundaries, and negative tests. For an ambiguous timeout, require an UNKNOWN state, authoritative lookup, stable idempotency binding, and an escalation path. For a verified Chainlink event, require a separate application authorization/policy gate. Do not require unrelated Chainlink product tutorials.
+Score:
+- 1.0: Complete and appropriately scoped (PASS)
+- 0.5: Useful but missing a material requested control (FAIL)
+- 0.0: Incomplete or unusable (FAIL)

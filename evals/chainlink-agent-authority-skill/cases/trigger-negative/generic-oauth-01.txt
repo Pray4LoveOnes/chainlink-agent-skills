@@ -1,0 +1,1 @@
+Show me how to implement a normal OAuth 2.1 authorization-code flow with PKCE for a browser application. This project does not use Chainlink or autonomous agents.

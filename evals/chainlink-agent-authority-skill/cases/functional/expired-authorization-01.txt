@@ -1,0 +1,1 @@
+An agent received a correctly signed payment authorization with issuedAt, notBefore, and expiresAt bound into the signed payload. The authorization expired while an approval queue was delayed. Explain whether it may submit now, how nonce reservation should behave, and what evidence to retain.

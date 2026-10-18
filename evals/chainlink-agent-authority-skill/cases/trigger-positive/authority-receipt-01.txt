@@ -1,0 +1,1 @@
+Design bounded agent authority and a proof-of-execution receipt that lets us compare what a principal authorized, what the AI agent attempted, and what a Chainlink-connected adapter actually executed.

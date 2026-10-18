@@ -6,6 +6,7 @@ require "psych"
 
 ROOT = Pathname.new(__dir__).join("..", "..").realpath.freeze
 SKILL_IDS = %w[
+  chainlink-agent-authority-skill
   chainlink-ccip-skill
   chainlink-cre-skill
   chainlink-cre-connect-skill

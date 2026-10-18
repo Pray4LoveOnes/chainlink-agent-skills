@@ -1,0 +1,1 @@
+Our Chainlink-powered treasury agent has a signed authorization for `read_balance` on account A. It now proposes `transfer` from account A to a new recipient because that seems like the best next step. Design the decision and receipt path. The transfer must not execute merely because the same principal signed the narrower authorization.

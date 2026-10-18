@@ -1,0 +1,13 @@
+Evaluate whether the response correctly models application-layer bounded authority and verifiable execution.
+Check applicable items:
+1. Separates principal authorization, signature verification, current policy, agent attempt, external evidence, finality, state transition, and settlement.
+2. Binds authorization to canonical intent, tenant, audience, environment, network, resource, action, limits, nonce, and temporal bounds as relevant.
+3. Uses an independently configured trust root and durable atomic replay control.
+4. Compares authorized, attempted, and executed forms on authorization-critical fields.
+5. Preserves UNKNOWN for ambiguous external outcomes and reconciles authoritative evidence before retry.
+6. States that receipts and state roots prove only their defined evidence/integrity properties.
+7. Uses the relevant Chainlink product boundary without inventing APIs or native capabilities.
+Score:
+- 1.0: Correct boundaries and workflow (PASS)
+- 0.5: Mostly correct but missing one material boundary (FAIL)
+- 0.0: Unsafe or incorrect authority/execution model (FAIL)

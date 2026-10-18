@@ -1,0 +1,1 @@
+Two workers receive the same signed intent and one crashes during the external call. Design durable replay prevention and recovery without claiming exactly-once execution.

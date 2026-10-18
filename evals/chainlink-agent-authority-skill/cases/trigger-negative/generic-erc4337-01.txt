@@ -1,0 +1,1 @@
+Review a generic ERC-4337 wallet that uses UserOperations, EntryPoint, a bundler, and a verifying paymaster. Explain nonce and sponsorship failure handling. It does not use Chainlink and is not an autonomous-agent authority system.
