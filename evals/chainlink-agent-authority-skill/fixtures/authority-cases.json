@@ -1,0 +1,24 @@
+{
+  "schema": "chainlink-agent-authority-fixtures/1",
+  "cases": [
+    { "id": "unauthorized-action", "mutation": "skip-authorization", "expected": "invalid transition", "fulfillment": false },
+    { "id": "expired-authority", "mutation": "expire-before-submit", "expected": "outside its validity interval", "fulfillment": false },
+    { "id": "revoked-authority", "mutation": "revoke", "expected": "not active", "fulfillment": false },
+    { "id": "replayed-nonce", "mutation": "reuse-nonce", "expected": "consumed exactly once", "fulfillment": false },
+    { "id": "verified-event-no-authorization", "mutation": "remove-outbound-authorization", "expected": "outbound authorization is missing or invalid", "fulfillment": false },
+    { "id": "authorization-no-business-policy", "mutation": "deny-policy", "expected": "business policy did not authorize", "fulfillment": false },
+    { "id": "ambiguous-timeout", "mutation": "unknown-with-fulfillment", "expected": "fulfillment was created", "fulfillment": false },
+    { "id": "wrong-tenant", "mutation": "wrong-tenant", "expected": "does not match bounded authority", "fulfillment": false },
+    { "id": "wrong-chain", "mutation": "wrong-chain", "expected": "does not match bounded authority", "fulfillment": false },
+    { "id": "wrong-action", "mutation": "wrong-action", "expected": "does not match bounded authority", "fulfillment": false },
+    { "id": "wrong-destination", "mutation": "wrong-destination", "expected": "does not match bounded authority", "fulfillment": false },
+    { "id": "wrong-scope", "mutation": "wrong-scope", "expected": "does not match bounded authority", "fulfillment": false },
+    { "id": "tampered-receipt", "mutation": "tamper-receipt", "expected": "receiptDigest mismatch", "fulfillment": false },
+    { "id": "mismatched-state-root", "mutation": "tamper-state", "expected": "stateDigest mismatch", "fulfillment": false },
+    { "id": "duplicate-delivery", "mutation": "duplicate-sequence", "expected": "sequence must be contiguous", "fulfillment": false },
+    { "id": "out-of-order-delivery", "mutation": "out-of-order", "expected": "invalid transition", "fulfillment": false },
+    { "id": "injected-signer", "mutation": "inject-signer", "expected": "not the configured trusted principal", "fulfillment": false },
+    { "id": "missing-finality", "mutation": "remove-finality", "expected": "required finality is missing", "fulfillment": false },
+    { "id": "missing-execution", "mutation": "remove-execution", "expected": "execution was not authoritatively observed", "fulfillment": false }
+  ]
+}

@@ -1,0 +1,43 @@
+name: Agent authority conformance
+
+on:
+  pull_request:
+    paths:
+      - "chainlink-agent-authority-skill/**"
+      - "evals/chainlink-agent-authority-skill/**"
+      - ".github/workflows/agent-authority-conformance.yml"
+  push:
+    branches: [main, "feat/agent-authority-conformance"]
+    paths:
+      - "chainlink-agent-authority-skill/**"
+      - "evals/chainlink-agent-authority-skill/**"
+      - ".github/workflows/agent-authority-conformance.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --test chainlink-agent-authority-skill/scripts/verify-execution-trace.test.mjs evals/chainlink-agent-authority-skill/tests/*.mjs
+      - run: node chainlink-agent-authority-skill/scripts/conformance/benchmark.mjs --intents 10000 --workers 4
+      - run: git diff --check
+
+  sdk-configuration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.25.x'
+      - run: cd chainlink-agent-authority-skill/assets/crec-readonly && GOTOOLCHAIN=local GOPROXY=off go test -count=1 -v config.go config_test.go
+      - name: SDK build (requires network and module availability)
+        continue-on-error: true
+        run: cd chainlink-agent-authority-skill/assets/crec-readonly && go test ./...

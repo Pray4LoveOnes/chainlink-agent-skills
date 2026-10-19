@@ -1,0 +1,1 @@
+An x402-compatible payment adapter timed out after submission. We cannot tell whether the payment executed, and the protocol-specific lookup and idempotency rules are supplied by a private adapter contract. Design safe recovery and reconciliation without inventing x402 or Chainlink APIs.

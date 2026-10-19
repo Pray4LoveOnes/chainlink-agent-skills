@@ -6,6 +6,7 @@ Official Repo for Chainlink coding skills. Each skill follows the [Agent Skills 
 
 | Skill                                                         | Description                                                                                           |
 | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| [chainlink-agent-authority-skill](chainlink-agent-authority-skill/) | Bounded agent authority, execution receipts, deterministic replay, and settlement reconciliation |
 | [chainlink-cre-skill](chainlink-cre-skill/)                   | CRE onboarding, workflow generation, CLI/SDK help, and runtime operations                             |
 | [chainlink-cre-connect-skill](chainlink-cre-connect-skill/)   | CRE Connect watchers, verifiable events, gas-less operations, Smart Accounts, and DTA                     |
 | [chainlink-ccip-skill](chainlink-ccip-skill/)                 | CCIP sends, contracts, local testing, monitoring, discovery, and CCT workflows                        |
@@ -33,6 +34,7 @@ But if you want to install globally (at the user level) then add the `-g` flag.
 Note the use of `--skill` to specify which specific skill to install.
 
 ```bash
+npx skills add smartcontractkit/chainlink-agent-skills --skill chainlink-agent-authority-skill -g
 npx skills add smartcontractkit/chainlink-agent-skills --skill chainlink-cre-skill -g
 npx skills add smartcontractkit/chainlink-agent-skills --skill chainlink-cre-connect-skill -g
 npx skills add smartcontractkit/chainlink-agent-skills --skill chainlink-ccip-skill -g

@@ -1,0 +1,5 @@
+The prompt directly concerns bounded AI-agent authority, signed-intent replay, authorized/attempted/executed comparison, proof-of-execution receipts, deterministic state-machine replay, or unknown settlement reconciliation in a Chainlink-connected application. Reward focused use of the application-layer model and correct Chainlink boundaries. Do not require every reference topic.
+Score:
+- 1.0: Clearly and proportionally applies this skill (PASS)
+- 0.5: Generic or ambiguous activation (FAIL)
+- 0.0: Uses the wrong product or authority model (FAIL)

@@ -1,0 +1,170 @@
+description: Promptfoo eval suite for chainlink-agent-authority-skill
+commandLineOptions:
+  maxConcurrency: 2
+
+providers:
+  - id: '{{ env.PROMPTFOO_BASELINE_PROVIDER or "anthropic:messages:claude-sonnet-4-20250514" }}'
+    label: baseline
+    prompts: [baseline_prompt]
+    config: { temperature: 0, max_tokens: 4096, showThinking: false }
+  - id: '{{ env.PROMPTFOO_WITH_SKILL_PROVIDER or env.PROMPTFOO_BASELINE_PROVIDER or "anthropic:messages:claude-sonnet-4-20250514" }}'
+    label: with-skill
+    prompts: [with_skill_prompt]
+    config: { temperature: 0, max_tokens: 4096, showThinking: false }
+
+defaultTest:
+  assert:
+    - type: llm-rubric
+      provider: '{{ env.PROMPTFOO_GRADER_PROVIDER or "openai:gpt-5-mini" }}'
+      metric: must-pass
+      value: file://rubrics/must-pass.txt
+    - type: javascript
+      metric: deterministic-unsafe-authority-claim
+      value: |
+        const text = String(output || '').replace(/\s+/g, ' ');
+        const violations = [
+          /(?:valid|verified) signature (?:alone )?(?:is|proves|grants) (?:business )?authorization/i,
+          /(?:DON|OCR) (?:proof|signature) (?:alone )?(?:is|proves|grants) (?:business )?authorization/i,
+          /timeout.{0,100}(?:retry|resubmit).{0,40}(?:new|fresh) (?:nonce|idempotency key)/i,
+          /guarantee(?:s|d)? exactly[- ]once execution/i,
+          /receipt (?:independently )?proves (?:ownership|entitlement|legal settlement)/i,
+        ];
+        const matched = violations.find((pattern) => pattern.test(text));
+        return matched
+          ? { pass: false, score: 0, reason: `Unsafe deterministic claim matched ${matched}` }
+          : { pass: true, score: 1, reason: 'No deterministic unsafe authority claim.' };
+
+x-assertions:
+  functional_asserts: &functional_asserts
+    - type: llm-rubric
+      provider: '{{ env.PROMPTFOO_GRADER_PROVIDER or "openai:gpt-5-mini" }}'
+      metric: correctness
+      value: file://rubrics/correctness.txt
+    - type: llm-rubric
+      provider: '{{ env.PROMPTFOO_GRADER_PROVIDER or "openai:gpt-5-mini" }}'
+      metric: completeness
+      value: file://rubrics/completeness.txt
+    - type: llm-rubric
+      provider: '{{ env.PROMPTFOO_GRADER_PROVIDER or "openai:gpt-5-mini" }}'
+      metric: safety
+      value: file://rubrics/safety.txt
+    - type: llm-rubric
+      provider: '{{ env.PROMPTFOO_GRADER_PROVIDER or "openai:gpt-5-mini" }}'
+      metric: freshness
+      value: file://rubrics/freshness.txt
+  trigger_positive_asserts: &trigger_positive_asserts
+    - type: llm-rubric
+      provider: '{{ env.PROMPTFOO_GRADER_PROVIDER or "openai:gpt-5-mini" }}'
+      metric: triggering
+      value: file://rubrics/triggering-positive.txt
+  trigger_negative_asserts: &trigger_negative_asserts
+    - type: llm-rubric
+      provider: '{{ env.PROMPTFOO_GRADER_PROVIDER or "openai:gpt-5-mini" }}'
+      metric: triggering
+      value: file://rubrics/triggering-negative.txt
+
+prompts:
+  - id: file://prompts/baseline.js
+    label: baseline_prompt
+  - id: file://prompts/with-skill.js
+    label: with_skill_prompt
+
+tests:
+  - description: functional / unauthorized tool action
+    vars:
+      case_file: cases/functional/unauthorized-tool-action-01.txt
+      reference_files: [references/bounded-authority.md, references/execution-receipts.md]
+      workflow: bounded-authority
+      expected_trigger: "yes"
+    metadata: { workflow: bounded-authority, category: functional, smoke: true }
+    assert: *functional_asserts
+
+  - description: functional / expired authorization
+    vars:
+      case_file: cases/functional/expired-authorization-01.txt
+      reference_files: [references/bounded-authority.md, references/execution-receipts.md]
+      workflow: bounded-authority
+      expected_trigger: "yes"
+    metadata: { workflow: bounded-authority, category: functional, smoke: true }
+    assert: *functional_asserts
+
+  - description: functional / replayed signed intent
+    vars:
+      case_file: cases/functional/replayed-intent-01.txt
+      reference_files: [references/bounded-authority.md, references/deterministic-replay.md]
+      workflow: deterministic-replay
+      expected_trigger: "yes"
+    metadata: { workflow: deterministic-replay, category: functional, smoke: true }
+    assert: *functional_asserts
+
+  - description: functional / verified event without business authorization
+    vars:
+      case_file: cases/functional/verified-event-no-authorization-01.txt
+      reference_files: [references/bounded-authority.md, references/execution-receipts.md]
+      workflow: evidence-boundary
+      expected_trigger: "yes"
+    metadata: { workflow: evidence-boundary, category: functional, smoke: true }
+    assert: *functional_asserts
+
+  - description: functional / settlement timeout unknown result
+    vars:
+      case_file: cases/functional/unknown-settlement-01.txt
+      reference_files: [references/settlement-reconciliation.md, references/deterministic-replay.md]
+      workflow: settlement-reconciliation
+      expected_trigger: "yes"
+    metadata: { workflow: settlement-reconciliation, category: functional, smoke: true }
+    assert: *functional_asserts
+
+  - description: trigger-positive / authority receipt
+    vars:
+      case_file: cases/trigger-positive/authority-receipt-01.txt
+      reference_files: [references/bounded-authority.md, references/execution-receipts.md]
+      workflow: execution-receipts
+      expected_trigger: "yes"
+    metadata: { workflow: execution-receipts, category: trigger-positive, smoke: true }
+    assert: *trigger_positive_asserts
+
+  - description: trigger-positive / deterministic replay
+    vars:
+      case_file: cases/trigger-positive/deterministic-replay-01.txt
+      reference_files: [references/deterministic-replay.md, references/settlement-reconciliation.md]
+      workflow: deterministic-replay
+      expected_trigger: "yes"
+    metadata: { workflow: deterministic-replay, category: trigger-positive, smoke: true }
+    assert: *trigger_positive_asserts
+
+  - description: trigger-negative / ordinary CRE workflow
+    vars:
+      case_file: cases/trigger-negative/ordinary-cre-workflow-01.txt
+      reference_files: []
+      workflow: none
+      expected_trigger: "no"
+    metadata: { workflow: none, category: trigger-negative, smoke: true }
+    assert: *trigger_negative_asserts
+
+  - description: trigger-negative / CRE Connect event verification
+    vars:
+      case_file: cases/trigger-negative/cre-connect-event-01.txt
+      reference_files: []
+      workflow: none
+      expected_trigger: "no"
+    metadata: { workflow: none, category: trigger-negative, smoke: true }
+    assert: *trigger_negative_asserts
+
+  - description: trigger-negative / generic OAuth
+    vars:
+      case_file: cases/trigger-negative/generic-oauth-01.txt
+      reference_files: []
+      workflow: none
+      expected_trigger: "no"
+    metadata: { workflow: none, category: trigger-negative, smoke: true }
+    assert: *trigger_negative_asserts
+
+  - description: trigger-negative / generic ERC-4337
+    vars:
+      case_file: cases/trigger-negative/generic-erc4337-01.txt
+      reference_files: []
+      workflow: none
+      expected_trigger: "no"
+    metadata: { workflow: none, category: trigger-negative, smoke: true }
+    assert: *trigger_negative_asserts

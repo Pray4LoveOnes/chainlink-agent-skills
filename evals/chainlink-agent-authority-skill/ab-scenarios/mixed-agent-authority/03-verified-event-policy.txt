@@ -1,0 +1,1 @@
+A finalized, locally verified CRE Connect event arrives, but application policy denies fulfillment. Explain which result controls and what evidence is recorded.

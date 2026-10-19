@@ -1,0 +1,39 @@
+# A/B Comparison Rubric
+
+Compare baseline and skill-enabled responses to the same prompt. Reward the skill only when it materially improves authority scope, durable replay control, authorized/attempted/executed comparison, evidence semantics, or unknown-outcome reconciliation. Penalize verbosity, invented Chainlink or payment APIs, product overclaims, and activation on ordinary CRE or generic OAuth requests.
+
+Score each response from 1 to 5 for task satisfaction, correctness, Chainlink boundary discipline, completeness, safety, and proportionality.
+
+Return strict JSON only:
+
+```json
+{
+  "case": "<case-id>",
+  "winner": "skill|baseline|tie|mixed",
+  "confidence": 0.0,
+  "scores": {
+    "baseline": {
+      "task_satisfaction": 1,
+      "correctness": 1,
+      "chainlink_boundary": 1,
+      "completeness": 1,
+      "safety": 1,
+      "proportionality": 1
+    },
+    "with_skill": {
+      "task_satisfaction": 1,
+      "correctness": 1,
+      "chainlink_boundary": 1,
+      "completeness": 1,
+      "safety": 1,
+      "proportionality": 1
+    }
+  },
+  "skill_helped": ["short concrete observation"],
+  "skill_hurt": ["short concrete observation"],
+  "recommended_skill_changes": ["short concrete change"],
+  "reason": "one or two sentences"
+}
+```
+
+Use confidence from 0.0 to 1.0. Ordinary CRE and generic OAuth cases should tie or favor the less over-triggered answer.

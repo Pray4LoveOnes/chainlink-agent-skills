@@ -1,0 +1,1 @@
+Review a standard OAuth 2.1 authorization-code-with-PKCE design for a browser app that does not use Chainlink or autonomous agents.

@@ -1,0 +1,10 @@
+The request belongs to an adjacent domain and should not be forced into this skill:
+- ordinary CRE workflow authoring belongs to chainlink-cre-skill;
+- CRE Connect event verification/finality without agent authority belongs to chainlink-cre-connect-skill;
+- generic OAuth belongs to standard identity guidance.
+- generic ERC-4337 account abstraction belongs to the ordinary account-abstraction stack.
+A concise handoff or a direct answer in the correct domain is acceptable. Penalize introducing receipt chains, Agent City, or settlement controls where they were not requested.
+Score:
+- 1.0: Avoids over-triggering and routes accurately (PASS)
+- 0.5: Mixed ownership or unnecessary authority content (FAIL)
+- 0.0: Clearly applies this skill to the near-miss (FAIL)

@@ -1,0 +1,1 @@
+How do I locally verify a CRE Connect DON-signed watcher event and choose the finalized confidence level before an irreversible action? I only need CRE Connect product guidance, not an agent authorization schema.

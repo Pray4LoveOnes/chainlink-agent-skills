@@ -15,6 +15,15 @@ harnesses:
       - gemini-3-flash-preview
 
 skills:
+  - id: chainlink-agent-authority-skill
+    path: chainlink-agent-authority-skill
+    test_cases:
+      - prompt: "Design bounded authority for an AI agent so a signed read permission cannot authorize a transfer."
+      - prompt: "Create a proof-of-execution receipt that compares authorized, attempted, and executed actions without overstating what the evidence proves."
+      - prompt: "Two workers received the same signed settlement intent and one timed out after submission. Design replay-safe recovery and reconciliation."
+      - prompt: "Can a finalized, locally verified CRE Connect event trigger fulfillment when application policy has not authorized it?"
+      - prompt: "Design deterministic replay tests for duplicate callbacks, reordered events, crash recovery, and tenant isolation."
+
   - id: chainlink-cre-skill
     path: chainlink-cre-skill
     test_cases:
