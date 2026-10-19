@@ -1,5 +1,21 @@
 #!/usr/bin/env node
 
+/**
+ * Portable, structural trace verifier.
+ *
+ * This file checks an application-owned trace: canonical digest links, tenant
+ * scope, lifecycle ordering, authority bounds, replay markers, execution
+ * evidence, and finality labels. It deliberately does not recover signatures,
+ * query a chain, call Chainlink, or authorize a real fulfillment. For that
+ * stronger boundary use `scripts/conformance/verify-bundle.mjs` with a separate
+ * trust configuration.
+ *
+ * CLI:
+ *   node scripts/verify-execution-trace.mjs <trace.json>
+ *
+ * A non-zero exit means the trace is invalid. A valid trace is evidence of
+ * internally consistent records, not proof that the records describe reality.
+ */
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
@@ -17,6 +33,10 @@ const ALLOWED = new Map([
   ["CONFIRMED", new Set(["SETTLED", "FAILED"])],
 ]);
 
+/**
+ * canonical serializes the small trace schema deterministically by sorting
+ * object keys. It is intentionally limited to fixture-sized JSON values.
+ */
 export function canonical(value) {
   if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
   if (value && typeof value === "object") {
@@ -25,24 +45,29 @@ export function canonical(value) {
   return JSON.stringify(value);
 }
 
+/** digest applies a domain separator before hashing a canonical value. */
 function digest(domain, value) {
   return createHash("sha256").update(domain).update(canonical(value)).digest("hex");
 }
 
+/** receiptDigest hashes a receipt after removing its self-referential field. */
 export function receiptDigest(record) {
   const payload = { ...record };
   delete payload.receiptDigest;
   return digest(RECEIPT_DOMAIN, payload);
 }
 
+/** stateDigest produces the replay checkpoint digest for one state snapshot. */
 export function stateDigest(state) {
   return digest(STATE_DOMAIN, state);
 }
 
+/** requireString records a validation error without throwing away other errors. */
 function requireString(value, path, errors) {
   if (typeof value !== "string" || value.length === 0) errors.push(`${path} must be a non-empty string`);
 }
 
+/** authorityErrors validates the configured authority claims and time bounds. */
 function authorityErrors(trace, errors) {
   const auth = trace.authority;
   if (!auth || typeof auth !== "object" || Array.isArray(auth)) {
@@ -64,6 +89,7 @@ function authorityErrors(trace, errors) {
   if (!Number.isSafeInteger(auth.nonceUseCount) || auth.nonceUseCount !== 1) errors.push("authority nonce or signed intent must be consumed exactly once");
 }
 
+/** evidenceErrors prevents consequential states from skipping evidence or finality. */
 function evidenceErrors(trace, finalState, errors) {
   const evidence = trace.evidence;
   const consequential = ["CONFIRMED", "SETTLED"].includes(finalState) || trace.fulfillmentCreated === true;
@@ -79,6 +105,11 @@ function evidenceErrors(trace, finalState, errors) {
   if (evidence.tenantId !== trace.tenantId) errors.push("execution evidence crosses the tenant boundary");
 }
 
+/**
+ * verifyTrace validates a complete trace and fails closed on any error.
+ * `fulfillmentAllowed` is retained for compatibility with the original fixture
+ * suite; it is not permission to move assets or invoke an external service.
+ */
 export function verifyTrace(trace) {
   const errors = [];
   if (!trace || typeof trace !== "object" || Array.isArray(trace)) return { valid: false, fulfillmentAllowed: false, errors: ["trace must be an object"] };
@@ -145,6 +176,7 @@ export function verifyTrace(trace) {
   return { valid: errors.length === 0, fulfillmentAllowed, errors, finalState: previousState, finalReceiptDigest: previousDigest, finalStateDigest: previousStateDigest };
 }
 
+/** main is the read-only JSON CLI entry point. */
 async function main() {
   const [file] = process.argv.slice(2);
   if (!file) throw new Error("usage: node scripts/verify-execution-trace.mjs <trace.json>");
