@@ -6,7 +6,7 @@ compatibility: Designed for AI agents that implement https://agentskills.io/spec
 allowed-tools: Read WebFetch Write Edit Bash(node:*)
 metadata:
   purpose: Application-layer bounded authority and verifiable execution patterns for Chainlink-powered agents
-  version: "0.0.3"
+  version: "0.0.4"
 ---
 
 # Chainlink Agent Authority Skill

@@ -1,3 +1,4 @@
+/** Black-box tests for the independent verifier process and canonical wire gate. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, writeFileSync } from 'node:fs';
@@ -9,6 +10,7 @@ import { makeFixture } from '../../../chainlink-agent-authority-skill/scripts/co
 import { canonical } from '../../../chainlink-agent-authority-skill/scripts/conformance/codec.mjs';
 
 const cli = fileURLToPath(new URL('../../../chainlink-agent-authority-skill/scripts/conformance/verify-bundle.mjs', import.meta.url));
+/** run writes ephemeral files and invokes the CLI without importing its verifier. */
 function run(bundle, trust, rawBundle = null) {
   const d = mkdtempSync(join(tmpdir(), 'authority-cli-'));
   writeFileSync(join(d, 'bundle.json'), rawBundle ?? `${canonical(bundle)}\n`);

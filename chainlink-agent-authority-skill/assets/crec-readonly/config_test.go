@@ -2,6 +2,7 @@ package main
 
 import "testing"
 
+// fixtureConfig is deliberately synthetic and contains no usable credential.
 func fixtureConfig() map[string]string {
 	return map[string]string{
 		"CREC_ENABLE_AUTHENTICATED_READ": "1", "CREC_BASE_URL": "https://crec.example.invalid/v1",
@@ -12,6 +13,7 @@ func fixtureConfig() map[string]string {
 	}
 }
 
+// TestValidConfiguration covers the accepted shape without contacting CRE Connect.
 func TestValidConfiguration(t *testing.T) {
 	env := fixtureConfig()
 	c, err := loadConfig(func(k string) string { return env[k] })
@@ -20,6 +22,7 @@ func TestValidConfiguration(t *testing.T) {
 	}
 }
 
+// TestRejectConfiguration ensures unsafe transport and trust inputs fail closed.
 func TestRejectConfiguration(t *testing.T) {
 	cases := []struct{ name, key, value string }{
 		{"requires_opt_in", "CREC_ENABLE_AUTHENTICATED_READ", ""},

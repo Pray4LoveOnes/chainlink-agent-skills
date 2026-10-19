@@ -1,3 +1,4 @@
+/** Prompt assembly tests exercise the same shared loader used by repository evals. */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import Module from "node:module";
@@ -10,6 +11,7 @@ const evalDir = path.resolve(here, "..");
 const repositoryRoot = path.resolve(evalDir, "..", "..");
 const helperPath = path.join(repositoryRoot, "evals", "shared", "with-skill-prompt.js");
 
+/** loadCommonJs loads a prompt module without requiring a package install. */
 async function loadCommonJs(filename) {
   const source = await readFile(filename, "utf8");
   const loaded = new Module(filename);

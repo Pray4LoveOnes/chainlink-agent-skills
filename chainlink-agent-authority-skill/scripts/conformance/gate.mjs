@@ -1,6 +1,11 @@
+/**
+ * Application policy gate. It validates a signed intent against independently
+ * configured tenant/policy/signer data; it never submits or fulfills anything.
+ */
 import { canonical, checkSignature, digest, exactKeys } from './codec.mjs';
 
 export const intentFields = ['version', 'id', 'tenant', 'project', 'chain', 'action', 'destination', 'amount', 'asset', 'scope', 'agent', 'audience', 'nonce', 'issuedAt', 'expiresAt'];
+/** authorize returns a decision and reason suitable for durable audit logging. */
 export function authorize(bundle, trust, now) {
   try {
     canonical(bundle);

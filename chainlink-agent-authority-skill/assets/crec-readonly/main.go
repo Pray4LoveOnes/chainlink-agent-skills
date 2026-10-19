@@ -1,5 +1,10 @@
 // This application-owned example authenticates a read and verifies watcher
 // envelopes locally. It does not authorize, sign, submit, or fulfill anything.
+//
+// The SDK surface is documented CRE Connect v0.8.0. Provisioned values are
+// deployment inputs; the event cannot choose its own organization, DON tenant,
+// signer set, endpoint, or API key. The emitted record is an unsigned local
+// diagnostic, not a portable DON proof or business authorization.
 package main
 
 import (
@@ -31,6 +36,9 @@ type observation struct {
 	IrreversibleFulfillmentAllowed bool   `json:"irreversibleFulfillmentAllowed"`
 }
 
+// run performs one bounded read-only poll and stops on proof or verification
+// failure. It intentionally does not advance a production cursor or dispatch a
+// downstream action.
 func run() error {
 	c, err := loadConfig(os.Getenv)
 	if err != nil {

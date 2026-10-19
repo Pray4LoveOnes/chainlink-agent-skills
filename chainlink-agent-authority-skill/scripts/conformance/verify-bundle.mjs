@@ -1,6 +1,15 @@
 #!/usr/bin/env node
-// Independent offline verifier: imports codec primitives, never the producer or gate.
-// Trust configuration is an operator input, not an authority asserted by the bundle.
+/**
+ * Independent offline receipt-bundle verifier.
+ *
+ * It imports only codec primitives, never the producer or policy gate. Trust is
+ * supplied by the operator, not asserted by the bundle. A valid result proves
+ * signed, bound, internally consistent synthetic evidence; it never grants live
+ * fulfillment permission or proves blockchain finality.
+ *
+ * CLI:
+ *   node verify-bundle.mjs BUNDLE.json TRUST.json NOW_UNIX_SECONDS
+ */
 import { readFileSync, statSync } from 'node:fs';
 import { createPublicKey } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
@@ -21,10 +30,12 @@ const NEXT = {
   DENIED: [],
 };
 
+/** requireThat converts the first failed invariant into a verifier error. */
 function requireThat(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+/** fields enforces exact object schemas before any semantic comparison. */
 function fields(value, expected, label) {
   requireThat(value !== null && typeof value === 'object' && !Array.isArray(value), `${label}: expected object`);
   requireThat(Object.getPrototypeOf(value) === Object.prototype || Object.getPrototypeOf(value) === null, `${label}: non-JSON object`);
@@ -48,6 +59,7 @@ function hash(value, label) {
   requireThat(typeof value === 'string' && HEX.test(value), `${label}: invalid digest`);
 }
 
+/** envelope verifies a signature against an independent role configuration. */
 function envelope(value, role, label) {
   fields(value, 'body keyId signature', label);
   fields(role, 'id publicKey', `${label} trust`);
@@ -66,6 +78,7 @@ function envelope(value, role, label) {
  * proves that a signer told the truth. Persisted replay protection is the gate's
  * responsibility; an offline verifier is intentionally read-only and replayable.
  */
+/** verifyBundle performs read-only canonical, signature, scope, and replay checks. */
 export function verifyBundle(bundle, trust, now) {
   try {
     integer(now, 'verification time');
@@ -209,6 +222,7 @@ export function verifyBundle(bundle, trust, now) {
   }
 }
 
+/** readCanonicalFile rejects ambiguous JSON encodings before verification. */
 function readCanonicalFile(path) {
   const stat = statSync(path);
   requireThat(stat.isFile() && stat.size <= 1024 * 1024, 'input must be a regular file of at most 1 MiB');

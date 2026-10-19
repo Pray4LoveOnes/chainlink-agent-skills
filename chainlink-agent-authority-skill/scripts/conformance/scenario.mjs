@@ -1,3 +1,8 @@
+/**
+ * Offline end-to-end driver: intent -> bounded authority -> synthetic event ->
+ * durable submission -> provider lookup -> portable receipt. The final output
+ * is explicitly simulation evidence and cannot authorize a live fulfillment.
+ */
 import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -7,6 +12,7 @@ import { makeFixture, sealBundle } from './fixture.mjs';
 import { Store, SimulatedProvider } from './store.mjs';
 
 // Separate simulated observer reads committed downstream evidence, never a caller's success flag.
+/** observeSettlement derives evidence from the provider's committed record. */
 export function observeSettlement(provider, id, f) {
   const result = provider.lookup(id);
   if (!result) return null;
@@ -16,6 +22,7 @@ export function observeSettlement(provider, id, f) {
     idempotencyKey: id, executionId: result.execution_id, status: 'SETTLED', classification: 'simulated', observedAt: f.now },
   f.trust.keys.settlement.id, f.keys.settlement);
 }
+/** scenario runs the complete offline lifecycle in a temporary SQLite directory. */
 export function scenario(directory, mode = 'timeout-after-effect') {
   const f = makeFixture();
   const store = new Store(join(directory, 'application.sqlite'));

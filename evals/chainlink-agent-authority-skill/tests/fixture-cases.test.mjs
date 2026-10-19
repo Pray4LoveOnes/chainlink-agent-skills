@@ -1,3 +1,4 @@
+/** Fixture catalog tests cover the original structural trace verifier contract. */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
@@ -8,6 +9,7 @@ import { verifyTrace } from "../../../chainlink-agent-authority-skill/scripts/ve
 const fixtureUrl = new URL("../fixtures/authority-cases.json", import.meta.url);
 const fixtures = JSON.parse(await readFile(fixtureUrl, "utf8"));
 
+/** mutate applies one named negative fixture without changing production code. */
 function mutate(name) {
   let trace = buildTrace();
   switch (name) {

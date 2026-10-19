@@ -8,13 +8,17 @@ import (
 	"strings"
 )
 
-// Deployment configuration is a trust boundary, never an event-payload field.
+// config contains deployment-selected CRE Connect values. It is a trust
+// boundary: none of these values may be read from an event payload or claim.
 type config struct {
 	baseURL, apiKey, orgID, channelID, creTenantID string
 	threshold                                      int
 	signers                                        []string
 }
 
+// loadConfig validates shape, opt-in, HTTPS transport, and DON quorum inputs.
+// It does not prove that the operator owns the tenant or that the signer set is
+// current; those facts must come from provisioned onboarding documentation.
 func loadConfig(getenv func(string) string) (config, error) {
 	var c config
 	if getenv("CREC_ENABLE_AUTHENTICATED_READ") != "1" {

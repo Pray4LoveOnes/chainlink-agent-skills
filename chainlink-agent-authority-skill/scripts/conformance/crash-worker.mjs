@@ -1,3 +1,7 @@
+/**
+ * Child-process crash harness. Each boundary exits abruptly so recovery tests
+ * prove that durable state, not process memory, controls the next decision.
+ */
 import { readFileSync } from 'node:fs';
 import { Store, SimulatedProvider } from './store.mjs';
 

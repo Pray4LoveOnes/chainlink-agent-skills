@@ -1,4 +1,9 @@
 #!/usr/bin/env node
+/**
+ * Measures a synthetic 10,000-intent workload with real worker concurrency.
+ * Reported throughput and RSS are observations from this host, not Chainlink
+ * or Agent City performance claims. Use --intents and --workers to reproduce.
+ */
 import { availableParallelism, cpus, totalmem } from 'node:os';
 import { performance } from 'node:perf_hooks';
 import { Worker } from 'node:worker_threads';

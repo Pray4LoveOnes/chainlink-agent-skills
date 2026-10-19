@@ -1,9 +1,16 @@
+/**
+ * One isolated benchmark worker. It hashes synthetic intents and records
+ * deterministic policy rejects and duplicate settlement attempts. This worker
+ * never loads Agent City internals, signs a real request, or calls a network.
+ */
 import { parentPort, workerData } from 'node:worker_threads';
 import { createHash } from 'node:crypto';
 
+/** canonicalIntent provides the benchmark's deliberately small input encoding. */
 function canonicalIntent(i) {
   return JSON.stringify(i, Object.keys(i).sort());
 }
+/** run processes only the half-open range assigned by the parent worker. */
 function run() {
   let accepted = 0, rejected = 0, duplicateSettlementAttempts = 0;
   const seen = new Set();

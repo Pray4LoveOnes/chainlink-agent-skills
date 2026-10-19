@@ -1,9 +1,15 @@
+/**
+ * Durable application-owned state machine and simulated downstream provider.
+ * SQLite is used only for local qualification; it is not a blockchain ledger
+ * and does not claim distributed exactly-once execution.
+ */
 import { DatabaseSync } from 'node:sqlite';
 import { canonical, checkSignature, digest } from './codec.mjs';
 import { authorize } from './gate.mjs';
 import { transition } from './fixture.mjs';
 
 // Local simulation only: there is intentionally no network adapter or asset API.
+/** Store persists reservations, transitions, revocations, and synthetic effects. */
 export class Store {
   constructor(path) {
     this.db = new DatabaseSync(path);
@@ -31,6 +37,7 @@ export class Store {
     const revoked = this.db.prepare('SELECT nonce FROM revoked WHERE tenant=?').all(intent.tenant).map(r => r.nonce);
     return { ...trust, revokedNonces: [...trust.revokedNonces, ...revoked] };
   }
+  /** reserve validates authority and atomically claims the nonce/business key. */
   reserve(bundle, trust, now) {
     return this.transaction(() => {
       const gate = authorize(bundle, this.currentTrust(trust, bundle.intent), now);
@@ -56,6 +63,7 @@ export class Store {
     row.status = to;
     this.db.prepare('UPDATE intents SET status=?, transitions=?, bundle=? WHERE id=?').run(to, canonical(row.transitions), canonical(row.bundle), row.id);
   }
+  /** dispatch records SUBMITTED before the external call and preserves UNKNOWN. */
   dispatch(id, trust, now, provider, { afterSubmit, afterEffect, mode = 'success' } = {}) {
     if (!this.prepareDispatch(id, trust, now)) return { sent: false, reason: 'RECONCILE_OR_TERMINAL' };
     // Durable SUBMITTED survives death before call or acknowledgment: recovery must reconcile.
@@ -82,6 +90,7 @@ export class Store {
       this.move(row, 'SUBMITTED', now); return true;
     });
   }
+  /** reconcile accepts only independently signed, intent-bound provider evidence. */
   reconcile(id, trust, now, evidence) {
     return this.transaction(() => {
       const row = this.get(id);
@@ -98,6 +107,7 @@ export class Store {
       return true;
     });
   }
+  /** fulfill adds one local synthetic marker after all gates pass. */
   fulfill(id, trust, now) {
     return this.transaction(() => {
       const row = this.get(id);
@@ -113,6 +123,7 @@ export class Store {
   fulfillmentCount() { return this.db.prepare('SELECT count(*) AS n FROM fulfillments').get().n; }
 }
 
+/** SimulatedProvider supplies stable idempotency lookup for crash tests. */
 export class SimulatedProvider {
   constructor(path) {
     this.db = new DatabaseSync(path);

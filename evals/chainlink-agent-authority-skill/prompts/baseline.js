@@ -1,3 +1,4 @@
+// Baseline prompt loader: reads only the case requested by Promptfoo.
 const fs = require("fs");
 const path = require("path");
 

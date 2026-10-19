@@ -1,3 +1,4 @@
+/** Durable recovery tests use real SQLite state and child-process termination. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync } from 'node:fs';
@@ -11,6 +12,7 @@ import { Store, SimulatedProvider } from '../../../chainlink-agent-authority-ski
 import { observeSettlement, scenario } from '../../../chainlink-agent-authority-skill/scripts/conformance/scenario.mjs';
 import { verifyBundle } from '../../../chainlink-agent-authority-skill/scripts/conformance/verify-bundle.mjs';
 
+/** setup creates isolated application/provider databases for one test. */
 function setup(t) {
   const dir = mkdtempSync(join(tmpdir(), 'authority-test-'));
   const f = makeFixture(), s = new Store(join(dir, 'app.sqlite')), p = new SimulatedProvider(join(dir, 'provider.sqlite'));
